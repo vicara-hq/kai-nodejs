@@ -1,0 +1,25 @@
+{
+  "name": "kai",
+  "version": "0.0.1",
+  "description": "The Kai SDK for Nodejs",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vicara-hq/kai-nodejs.git"
+  },
+  "author": "Rakshith Ravi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vicara-hq/kai-nodejs/issues"
+  },
+  "homepage": "https://github.com/vicara-hq/kai-nodejs#readme",
+  "dependencies": {
+    "ws": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^6.0.1"
+  }
+}
