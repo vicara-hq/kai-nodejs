@@ -1,4 +1,5 @@
 import * as WebSocket from 'ws';
+import KaiEventEmitter from './KaiEventEmitter';
 
 let ws: WebSocket;
 
@@ -9,7 +10,24 @@ ws.on('open', () => {
 });
 
 ws.on('message', (data) => {
-	
+	var input = JSON.parse(data.toString());
+	KaiEvents.emit('data', input);
+
+	if(input.success != true) {
+		KaiEvents.emit('error', {
+			errorCode: input.errorCode,
+			error: input.error,
+			message: input.message
+		});
+		return;
+	}
+
+	switch(input.type) {
+		case "gestureData":
+			KaiEvents.emit('gestureData', input.gesture);
+			break;
+		// TODO other types of data
+	}
 });
 
 export function connect() {
@@ -25,7 +43,7 @@ export function subscribe(...capabilities: KaiCapabilities[]) {
 			json[toCamelCase(capability)] = true;
 		});
 		if(ws) {
-			return;
+			resolve();
 		}
 		ws.send(json, err => {
 			if(err)
@@ -45,7 +63,7 @@ export function unsubscribe(...capabilities: KaiCapabilities[]) {
 			json[toCamelCase(capability)] = false;
 		});
 		if(!ws) {
-			return;
+			resolve();
 		}
 		ws.send(json, err => {
 			if(err)
@@ -55,6 +73,8 @@ export function unsubscribe(...capabilities: KaiCapabilities[]) {
 		});
 	});
 }
+
+export const KaiEvents = new KaiEventEmitter();
 
 function toCamelCase(data: string) : string {
 	return data[0].toLowerCase() + data.substr(1);
