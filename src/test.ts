@@ -1,10 +1,19 @@
 import * as main from './index'
+import { Data } from 'ws';
+import { print } from 'util';
 
-main.connect('123','qwerty').then((message)=>{
+main.connect('0','qwerty').then((message:string)=>{
     console.log(message)
-}).catch((error)=>{
+}).catch((error:string)=>{
     console.log(error)
 })
 
+main.getCapabilities(0).then((message)=>{
+    console.log('resolved '+message)
+}).catch((error)=>{
+    console.log('REJECTED '+error)
+})
 
-var list = (main.getGestureList())
+//  var list = main.getCapabilities(0)
+
+// console.log(list)

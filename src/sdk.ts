@@ -4,7 +4,7 @@
 
 export interface Request {
 	type: 'authentication' | 'imuCalibration' | 'fingerCalibration' | 'isLatestDongle'
-	| 'setCapabilities' | 'listConnectedKais' | 'getKaiData' | 'switchHand' | 'enableDongleDFU' | 'getBatteryLevel';
+	| 'setCapabilities' | 'listConnectedKais' | 'getKaiData' | 'switchHand' | 'enableDongleDFU' | 'getBatteryLevel' | 'getCapabilities';
 	kaiId?: Number | 'default' | 'defaultLeft' | 'defaultRight';
 	moduleId?: string;
 	moduleSecret?: string;

@@ -7,14 +7,14 @@ import { resolve } from 'path';
 import { rejects } from 'assert';
 import * as Promise from 'bluebird';
 
-let ws:WebSocket;
+//let ws:WebSocket;
+let ws = new WebSocket('ws://localhost:2203')
 let gestureList = sdk.gestureList
 
 
 //Connect and Authenticate
 export function connect(moduleID:string,moduleSecret:string){
 	return new Promise((resolve,reject)=>{
-		ws = new WebSocket('ws://localhost:2203')
 		var authToken:sdk.Request={
 			type:'authentication'
 		}
@@ -31,15 +31,26 @@ export function connect(moduleID:string,moduleSecret:string){
 	})
 }
 
-//Get Gesture List
-export function getGestureList(){
-	return JSON.parse(JSON.stringify(gestureList))
-}		
+//Get Capabilities : has some errors
+export function getCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRight"='default'){
+	let getCapabilitiesRequest:sdk.Request={
+		'type':'getCapabilities',
+		'kaiId':kaiId
+	}
+	return new Promise((resolve,reject)=>{
+		ws.on('open',()=>{
+			ws.send(JSON.stringify(getCapabilitiesRequest,null,'\t'))
+		})
+		recieve().then((message)=>{
+			resolve(message)
+		}).catch((error)=>{
+			reject(error)
+		})
+	})
+	
+}	
 
-
-
-//Capabilities
-
+//Set Capabilities
 export function setCapabilities(kaiId:Number | 'default' | 'defaultLeft' | 'defaultRight',gestureData=false,pyrData=false,fingerShortcutData=false,linearFlickData=false,fingerPositionData=false,quaternionData=false,accelerometerData=false,gyroscopeData=false,magnetometerData=false){
 	var capabilitySet:sdk.SetCapabilitiesRequest = {
 		type: 'setCapabilities',
@@ -63,26 +74,29 @@ export function setCapabilities(kaiId:Number | 'default' | 'defaultLeft' | 'defa
 	
 }
 
-
-
-
-
 //Recieve : 
-
 function recieve(){
 	return new Promise((resolve,reject)=>{
 		ws.on('message',(data)=>{
 			var ress = JSON.parse(JSON.stringify(data))
-			console.log("Without two parse =  ",typeof(ress))
 			var res:sdk.Response = JSON.parse(JSON.parse(JSON.stringify(data)))
-			console.log('With two parse = ',typeof(res))
+			//console.log(res)
 			if (res['type']=='authentication' && res["success"]){
 				resolve('Auth Success')
-			}else{
+			}
+			if (res["success"]&&res['type']=='getCapabilities'){
+				resolve('12345')
+			}
+			else{
 				reject(res['error'])
 			}
 		})
 	})
+}
+
+//Get Gesture List returns a object
+export function getGestureList(){
+	return JSON.parse(JSON.stringify(gestureList))
 }
 
 
