@@ -1,81 +1,53 @@
 import * as WebSocket from 'ws';
-import KaiEventEmitter from './KaiEventEmitter';
+import { stringify } from 'querystring';
+import * as sdk from './sdk';
+import { print } from 'util';
+import { type } from 'os';
+import { resolve } from 'path';
+import { rejects } from 'assert';
+import * as Promise from 'bluebird';
+let ws:WebSocket;
+var isConnected:boolean = false
+var isAuthenticated:boolean = false
 
-let ws: WebSocket;
 
-ws.on('open', () => {
-	// TODO:
-	// Test compartibility
-	// Send capabilities
-});
-
-ws.on('message', (data) => {
-	var input = JSON.parse(data.toString());
-	KaiEvents.emit('data', input);
-
-	if(input.success != true) {
-		KaiEvents.emit('error', {
-			errorCode: input.errorCode,
-			error: input.error,
-			message: input.message
-		});
-		return;
+connect('123','qwerty')
+//connect and authenticate
+function connect(moduleID:string,moduleSecret:string){
+	ws = new WebSocket('ws://localhost:2203')
+	var authToken:sdk.Request = {
+		type:'authentication',
+		moduleId:moduleID,
+		moduleSecret:moduleSecret
 	}
-
-	switch(input.type) {
-		case "gestureData":
-			KaiEvents.emit('gestureData', input.gesture);
-			break;
-		// TODO other types of data
-	}
-});
-
-export function connect() {
-	ws = new WebSocket('ws://localhost:2203');
+	
+	ws.on('open',()=>{
+		ws.send(JSON.stringify(authToken,null,'\t'))
+		
+	})
+	recieve().then((message)=>{
+		console.log(message)
+	}).catch((error)=>{
+		console.log(error)
+	}).catch((errorMessage)=>{
+		console.log(errorMessage)
+	})
+		
+	
 }
 
-export function subscribe(...capabilities: KaiCapabilities[]) {
-	return new Promise((resolve, reject) => {
-		let json: any = {
-			type: 'setCapabilities'
-		};
-		capabilities.forEach(capability => {
-			json[toCamelCase(capability)] = true;
-		});
-		if(ws) {
-			resolve();
+function recieve(){
+	return new Promise((resolve,reject)=>{
+		ws.on('message',(data)=>{
+			var res:sdk.Response = JSON.parse(JSON.parse(JSON.stringify(data)))
+			isConnected = res["success"]
+			console.log(res)
+			if (isConnected && res['type']=='authentication'){
+				resolve('Auth Success')
+				console.log(res)
+			}else{
+				reject(res['error'])
 		}
-		ws.send(json, err => {
-			if(err)
-				reject(err);
-			else
-				resolve();
-		});
-	});
+	})
+})
 }
-
-export function unsubscribe(...capabilities: KaiCapabilities[]) {
-	return new Promise((resolve, reject) => {
-		let json: any = {
-			type: 'setCapabilities'
-		};
-		capabilities.forEach(capability => {
-			json[toCamelCase(capability)] = false;
-		});
-		if(!ws) {
-			resolve();
-		}
-		ws.send(json, err => {
-			if(err)
-				reject(err);
-			else
-				resolve();
-		});
-	});
-}
-
-export const KaiEvents = new KaiEventEmitter();
-
-function toCamelCase(data: string) : string {
-	return data[0].toLowerCase() + data.substr(1);
-};
