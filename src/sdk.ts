@@ -12,7 +12,7 @@ export interface Request {
 }
 
 export interface Response {
-	type: Request['type'] | 'incomingData' | 'kaiDisconnected' | 'kaiConnected' | 'batteryData' | 'dongleConnected' | 'dongleDisconnected';
+	type: Request['type'] | 'incomingData' | 'kaiDisconnected' | 'kaiConnected' | 'dongleConnected' | 'dongleDisconnected';
 	battery: number;
 	kaiId?: Request['kaiId'];
 	success?: boolean;
@@ -76,11 +76,6 @@ export interface Capability {
 
 export interface GetBatteryLevelRequest extends Request {
 	type: 'getBatteryLevel';
-}
-
-export interface BatteryData extends Response {
-	type: 'batteryData';
-	battery: Response['battery'];
 }
 
 export interface SwitchHandRequest extends Request {
@@ -180,8 +175,3 @@ export interface DongleFirmwareLatestResponse extends Response {
 }
 
 // SDK Config file
-
-export interface SdkConfig {
-	lastUsedPort: string;
-	hand: Request['hand'];
-}

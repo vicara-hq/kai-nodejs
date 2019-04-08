@@ -12,6 +12,7 @@ var isAuthenticated:boolean = false
 
 
 connect('123','qwerty')
+
 //connect and authenticate
 function connect(moduleID:string,moduleSecret:string){
 	ws = new WebSocket('ws://localhost:2203')
@@ -31,23 +32,30 @@ function connect(moduleID:string,moduleSecret:string){
 		console.log(error)
 	}).catch((errorMessage)=>{
 		console.log(errorMessage)
-	})
-		
-	
+	})		
 }
+
+//Capabilities
+
+// function setCapabilities(kaiId){
+// 	var capabilityRequest:sdk.Request
+// 	capabilityRequest.type='setCapabilities'
+// 	capabilityRequest.kaiId = kaiId
+// 	capabilityRequest.
+// }
+
+//Recieve : 
 
 function recieve(){
 	return new Promise((resolve,reject)=>{
 		ws.on('message',(data)=>{
 			var res:sdk.Response = JSON.parse(JSON.parse(JSON.stringify(data)))
-			isConnected = res["success"]
-			console.log(res)
-			if (isConnected && res['type']=='authentication'){
+			
+			if (res['type']=='authentication' && res["success"]){
 				resolve('Auth Success')
-				console.log(res)
 			}else{
 				reject(res['error'])
-		}
+			}
+		})
 	})
-})
 }
