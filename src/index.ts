@@ -26,7 +26,7 @@ export function connect(moduleID:string,moduleSecret:string){
 		recieve().then((message:string)=>{
 			resolve(message)
 		}).catch((error:string)=>{
-		reject(error)
+			reject(error)
 		})
 	})
 }
@@ -37,7 +37,7 @@ export function getCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRig
 		'type':'getCapabilities',
 		'kaiId':kaiId
 	}
-	return new Promise((resolve,reject)=>{
+		return new Promise((resolve,reject)=>{
 		ws.on('open',()=>{
 			ws.send(JSON.stringify(getCapabilitiesRequest,null,'\t'))
 		})
@@ -50,42 +50,53 @@ export function getCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRig
 	
 }	
 
+
+
 //Set Capabilities
 export function setCapabilities(kaiId:Number | 'default' | 'defaultLeft' | 'defaultRight',gestureData=false,pyrData=false,fingerShortcutData=false,linearFlickData=false,fingerPositionData=false,quaternionData=false,accelerometerData=false,gyroscopeData=false,magnetometerData=false){
 	var capabilitySet:sdk.SetCapabilitiesRequest = {
 		type: 'setCapabilities',
-		kaiId:123
+		kaiId:kaiId
 	}
+	capabilitySet.gestureData = gestureData
+	capabilitySet.pyrData = pyrData
+	capabilitySet.fingerShortcutData = fingerShortcutData
+	capabilitySet.linearFlickData = linearFlickData
+	capabilitySet.fingerPositionData=fingerPositionData
+	capabilitySet.quaternionData = quaternionData
 	capabilitySet.accelerometerData=accelerometerData
+	capabilitySet.gyroscopeData = gyroscopeData
+	capabilitySet.magnetometerData = magnetometerData	
 
-	// capabilityRequest.kaiId = Number(kaiId)
-	 //capabilityRequest['kaiId'] = kaiId
-	//capabilityRequest['gestureData'] = gestureData
-	// capabilityRequest.pyrData = pyrData
-	// capabilityRequest.fingerShortcutData = fingerShortcutData
-	// capabilityRequest.linearFlickData = linearFlickData
-	// capabilityRequest.fingerPositionData = fingerPositionData
-	// capabilityRequest.quaternionData = quaternionData
-	// capabilityRequest.accelerometerData = accelerometerData
-	// capabilityRequest.gyroscopeData = gyroscopeData
-	// capabilityRequest.magnetometerData = magnetometerData
+	return new Promise((resolve,reject)=>{
+		ws.on('open',()=>{
+			ws.send(JSON.stringify(capabilitySet,null,'\t'))
+		})
+		recieve().then((message)=>{
+			console.log('message')
+			resolve(message)
+		}).catch((error)=>{
+			console.log(error)
+			reject(error)
+		})
+	})
+}	
 
-	//console.log(capabilitySet)
-	
-}
 
 //Recieve : 
 function recieve(){
 	return new Promise((resolve,reject)=>{
 		ws.on('message',(data)=>{
-			var ress = JSON.parse(JSON.stringify(data))
+
 			var res:sdk.Response = JSON.parse(JSON.parse(JSON.stringify(data)))
-			//console.log(res)
-			if (res['type']=='authentication' && res["success"]){
+			if (res['type']=='authentication' && res["success"]==true){
 				resolve('Auth Success')
 			}
 			if (res["success"]&&res['type']=='getCapabilities'){
-				resolve('12345')
+				resolve('Capabilities Recieved')
+			}
+			if (res['success']&&res['type']=='setCapabilities'){
+				resolve('Capability Set Sucessfully')
 			}
 			else{
 				reject(res['error'])
@@ -100,3 +111,4 @@ export function getGestureList(){
 }
 
 
+//res not updating
