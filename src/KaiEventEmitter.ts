@@ -18,5 +18,19 @@ export default class KaiEventEmitter extends EventEmitter {
     onFingerCalibration(handler:any){
         this.addListener('fingerCalibration',handler)
     }
-    
+    onGetKaiData(handler:any){
+        this.addListener('getKaiData',handler);
+    }
+    onListConnectedKais(handler:any){
+        this.addListener('listConnectedKais',handler);
+    }
+    onIMUCalibration(handler:any){
+        this.addListener('imuCalibration',handler);
+    }
+    onSwitchHand(handler:any){
+        this.addListener('switchHand',handler);
+    }
+    onError(handler:any){
+        this.addListener('wrong',handler);
+    }
 }

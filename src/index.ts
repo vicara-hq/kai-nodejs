@@ -37,16 +37,18 @@ ws.on('message',function(data){
             case 'switchHand':
                 kaiEvents.emit('switchHand',response)
                 break;          
-              
-
             default:
-                kaiEvents.emit('wrong','wrong')
+                kaiEvents.emit('default','Invalid response')
                 break;
         };
     }else{
         kaiEvents.emit(response.type,response.error)
     }
 });
+
+//NOTE : getCapbilities isn't working right now
+
+
 export function fingerCalibration(kaiId:number|"default"|"defaultLeft"|"defaultRight"="default"){
     let request:sdk.FingerCalibrationRequest={
         type:'fingerCalibration',
@@ -55,8 +57,48 @@ export function fingerCalibration(kaiId:number|"default"|"defaultLeft"|"defaultR
     ws.on('open',function(){
         ws.send(JSON.stringify(request));
     });
-
 };
+
+export function listConnectedKais(){
+    let request:sdk.ListConnectedKaisRequest={
+        type:'listConnectedKais'
+    };
+    ws.on('open',function(){
+        ws.send(JSON.stringify(request))
+    });
+};
+
+export function getKaiData(kaiId:number|"default"|"defaultLeft"|"defaultRight"="default"){
+    let request:sdk.GetKaiDataRequest = {
+        type:'getKaiData',
+        kaiId:kaiId
+    }   
+    ws.on('open',function(){
+        ws.send(JSON.stringify(request))
+    });    
+}
+
+export function switchHand(kaiId:number|"default"|"defaultLeft"|"defaultRight"="default",hand:"left"|"right"="left"){
+    let request:sdk.SwitchHandRequest={
+        type:'switchHand',
+        kai:kaiId,
+        hand:hand
+    }
+    ws.on('open',function(){
+        ws.send(JSON.stringify(request))
+    });  
+}
+
+
+export function imuCalibration(kaiId:number| "default" | "defaultLeft" | "defaultRight" = "default"){
+    let request:sdk.Request = {
+        type:'imuCalibration',
+        kaiId:kaiId
+    };
+    ws.on('open',function(){
+        ws.send(JSON.stringify(request))
+    });
+}
 
 export function auth(moduleId:string,moduleSecret:string){
     let authToken:sdk.AuthenticationRequest={
@@ -81,3 +123,4 @@ export function setCapabilities(kaiId:string|"default"|"defaultLeft"|"defaultRig
 
     });
 }
+
