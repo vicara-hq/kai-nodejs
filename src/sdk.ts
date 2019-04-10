@@ -41,7 +41,19 @@ export interface AuthenticationRequest extends Request {
 	moduleId: string;
 	moduleSecret: string;
 }
+export interface FingerCalibrationRequest extends Request{
+	type: 'fingerCalibration';
+	kaiId:number|"default"|"defaultLeft"|"defaultRight";
 
+}
+export interface FingerCalibrationResponse extends Response{
+	type:'fingerCalibration';
+	kaiId:number;
+	defaultKai?:boolean;
+	defaultLeftKai?:boolean;
+	defaultRightKai?:boolean;
+	success:boolean;
+}
 export interface AuthenticationResponse extends Response {
 	type: 'authentication';
 	success: boolean;
