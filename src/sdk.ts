@@ -3,13 +3,13 @@
 // Basic request / response for comms. other than authentication
 
 export interface Request {
-	type: 'authentication' | 'imuCalibration' | 'fingerCalibration' | 'isLatestDongle'
-	| 'setCapabilities' | 'listConnectedKais' | 'getKaiData' | 'switchHand' | 'enableDongleDFU' | 'getBatteryLevel' | 'getCapabilities';
+	type: 'authentication' | 'imuCalibration' | 'fingerCalibration' | 'isLatestDongle'| 'setCapabilities' | 'listConnectedKais' | 'getKaiData' | 'switchHand' | 'enableDongleDFU' | 'getBatteryLevel'|'getCapabilities';
 	kaiId?: Number | 'default' | 'defaultLeft' | 'defaultRight';
 	moduleId?: string;
 	moduleSecret?: string;
 	hand?: 'left' | 'right';
 }
+
 
 export interface Response {
 	type: Request['type'] | 'incomingData' | 'kaiDisconnected' | 'kaiConnected' | 'dongleConnected' | 'dongleDisconnected';
@@ -25,6 +25,11 @@ export interface Response {
 	errorCode?: Number;
 	message?: string;
 }
+export interface GetCapabilitiesRequest extends Request{
+	type:'getCapabilities';
+	kaiId:number|"default"|"defaultLeft"|"defaultRight";
+}
+
 
 export interface ErrorResponse extends Response {
 	type: Request['type'];

@@ -34,4 +34,8 @@ export default class KaiEventEmitter extends EventEmitter {
     onIncomingData(handler:any){
         this.addListener('incomingData',handler)
     }
+    onGetCapabilities(handler:any){
+        this.addListener('getCapabilities',handler)
+    }
+    
 }

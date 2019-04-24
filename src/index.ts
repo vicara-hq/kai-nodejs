@@ -14,12 +14,12 @@ ws.on('message',function(data){
     if(response['success']){
         switch(response['type']){
             case 'authentication':
-                kaiEvents.emit('authentication','Auth Complete')      
+                kaiEvents.emit('authentication',response.success)      
                 break;
             case 'setCapabilities':
                 kaiEvents.emit('setCapabilities','Capabilities Set')
                 break;
-            case 'getCapabilities'://WIP
+            case 'getCapabilities':
                 kaiEvents.emit('getCapabilities',response)
                 break;
             case 'fingerCalibration':
@@ -50,6 +50,16 @@ ws.on('message',function(data){
 });
 
 //NOTE : getCapbilities isn't working right now
+export function getCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRight"="default"){
+    let request:sdk.GetCapabilitiesRequest={
+        type:'getCapabilities',
+        kaiId: kaiId
+    };
+    ws.on('open',function(){
+        ws.send(JSON.stringify(request));
+    });
+
+};
 
 export function incomingData(){
     let request={
@@ -62,7 +72,7 @@ export function incomingData(){
 export function fingerCalibration(kaiId:number|"default"|"defaultLeft"|"defaultRight"="default"){
     let request:sdk.FingerCalibrationRequest={
         type:'fingerCalibration',
-        kaiId:kaiId,
+        kaiId:kaiId
     };
     ws.on('open',function(){
         ws.send(JSON.stringify(request));
@@ -121,8 +131,9 @@ export function auth(moduleId:string,moduleSecret:string){
         ws.send(JSON.stringify(authToken))
     });
 };
-
-export function setCapabilities(kaiId:string|"default"|"defaultLeft"|"defaultRight"){ //capabilities:[string]
+//TODO:-
+export function setCapabilities(kaiId:string|"default"|"defaultLeft"|"defaultRight"){ 
+    //capabilities:[string]
     //TODO : check that ws.on('open') send [part']
     let request:sdk.SetCapabilitiesRequest={
         type : 'setCapabilities',
