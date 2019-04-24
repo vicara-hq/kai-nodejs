@@ -36,7 +36,10 @@ ws.on('message',function(data){
                 break; 
             case 'switchHand':
                 kaiEvents.emit('switchHand',response)
-                break;          
+                break;  
+            case 'incomingData':
+                kaiEvents.emit('incomingData',response) 
+                break;       
             default:
                 kaiEvents.emit('default','Invalid response')
                 break;
@@ -48,7 +51,14 @@ ws.on('message',function(data){
 
 //NOTE : getCapbilities isn't working right now
 
-
+export function incomingData(){
+    let request={
+        type:'incomingData'
+    };
+    ws.on('open',function(){
+        ws.send(JSON.stringify(request));
+    });
+}
 export function fingerCalibration(kaiId:number|"default"|"defaultLeft"|"defaultRight"="default"){
     let request:sdk.FingerCalibrationRequest={
         type:'fingerCalibration',

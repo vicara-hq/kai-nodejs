@@ -4,11 +4,9 @@ export default class KaiEventEmitter extends EventEmitter {
     onGesture(handler: any) {
         this.addListener('gestureData',handler);
     }
-
     onAuthentication(handler: any) {
         this.addListener('authentication', handler);
     }
-
     onConnect(handler: any) {
         this.addListener('wrong',handler);
     }
@@ -31,6 +29,9 @@ export default class KaiEventEmitter extends EventEmitter {
         this.addListener('switchHand',handler);
     }
     onError(handler:any){
-        this.addListener('wrong',handler);
+        this.addListener('error',handler);
+    }
+    onIncomingData(handler:any){
+        this.addListener('incomingData',handler)
     }
 }
