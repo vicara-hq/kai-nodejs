@@ -58,7 +58,6 @@ export function getCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRig
     ws.on('open',function(){
         ws.send(JSON.stringify(request));
     });
-
 };
 
 export function incomingData(){
@@ -109,7 +108,6 @@ export function switchHand(kaiId:number|"default"|"defaultLeft"|"defaultRight"="
     });  
 }
 
-
 export function imuCalibration(kaiId:number| "default" | "defaultLeft" | "defaultRight" = "default"){
     let request:sdk.Request = {
         type:'imuCalibration',
@@ -132,13 +130,16 @@ export function auth(moduleId:string,moduleSecret:string){
     });
 };
 //TODO:-
-export function setCapabilities(kaiId:string|"default"|"defaultLeft"|"defaultRight"){ 
-    //capabilities:[string]
-    //TODO : check that ws.on('open') send [part']
+export function setCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRight",capabilities:[string]){ 
     let request:sdk.SetCapabilitiesRequest={
         type : 'setCapabilities',
-        gestureData:true
+        kaiId:kaiId
     }
+    capabilities.forEach(element => {
+        
+    });   
+    
+    
     ws.on('open',function(){
         ws.send(JSON.stringify(request));
 
