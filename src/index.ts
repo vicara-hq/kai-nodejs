@@ -49,6 +49,23 @@ ws.on('message',function(data){
     }
 });
 
+//TODO:-
+export function setCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRight",capabilitiesArr:string[]){ 
+        var request:object = {
+            type:setCapabilities,
+            kaiId:kaiId
+        };
+        var obj = Object.assign({}, request)
+        capabilitiesArr.forEach(element => {
+          obj[element] = true
+        });
+        
+        ws.on('open',function(){
+            ws.send(JSON.stringify(request));
+    
+        });
+}
+
 //NOTE : getCapbilities isn't working right now
 export function getCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRight"="default"){
     let request:sdk.GetCapabilitiesRequest={
@@ -129,20 +146,8 @@ export function auth(moduleId:string,moduleSecret:string){
         ws.send(JSON.stringify(authToken))
     });
 };
-//TODO:-
-export function setCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRight",capabilities:[string]){ 
-    let request:sdk.SetCapabilitiesRequest={
-        type : 'setCapabilities',
-        kaiId:kaiId
-    }
-    capabilities.forEach(element => {
-        
-    });   
-    
-    
-    ws.on('open',function(){
-        ws.send(JSON.stringify(request));
 
-    });
+
+declare interface ObjectConstructor {
+    assign(objects: Object[]): Object;
 }
-
