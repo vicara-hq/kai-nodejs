@@ -52,14 +52,14 @@ ws.on('message',function(data){
 //TODO:-
 export function setCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRight",capabilitiesArr:string[]){ 
         var request:object = {
-            type:setCapabilities,
-            kaiId:kaiId
-        };
-        var obj = Object.assign({}, request)
+          type: 'setCapabilities',
+          kaiId: kaiId
+        }
+        var obj = {...request}
         capabilitiesArr.forEach(element => {
           obj[element] = true
         });
-        
+        console.log(obj)
         ws.on('open',function(){
             ws.send(JSON.stringify(request));
     
