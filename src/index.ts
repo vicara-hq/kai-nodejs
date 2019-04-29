@@ -2,6 +2,7 @@ import * as WebSocket from 'ws';
 import KaiEventEmitter from './KaiEventEmitter';
 import * as sdk from './sdk'
 import { KaiCapabilities } from "./KaiCapabilities";
+import { type } from 'os';
 
 let ws = new WebSocket('ws://localhost:2203');
 export let kaiEvents = new KaiEventEmitter();
@@ -56,13 +57,14 @@ export function setCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRig
           kaiId: kaiId
         }
         var obj = {...request}
+        const req = (this.obj as any)
         capabilitiesArr.forEach(element => {
-          obj[element] = true
+          req[element] = true
         });
-        console.log(obj)
+        
+
         ws.on('open',function(){
             ws.send(JSON.stringify(request));
-    
         });
 }
 
