@@ -1,9 +1,15 @@
-declare enum KaiCapabilities {
-	GestureData = 'GestureData',
-	LinearFlicks = 'LinearFlicks',
-	FingerShortcut = 'FingerShortcut',
-	FingerPosition = 'FingerPosition',
-	PYRData = 'PYRData',
-	QuaternionData = 'QuaternionData',
-	RawData = 'RawData'
+
+export declare enum KaiCapabilities {
+	GestureData = 'gestureData',
+	PYRData = 'pyrData'	,
+	FingerShortcutData = 'fingerShortcutData',
+	LinearFlickData = 'linearFlickData',
+	FingerPositionData = 'fingerPositionData',
+	QuaternionData = 'quaternionData',
+	AccelerometerData = 'accelerometerData',
+	GyroscopeData = 'gyroscopeData',
+	MagnetometerData='magnetometerData'
 };
+
+//complete this
+
