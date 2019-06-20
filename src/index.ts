@@ -3,7 +3,7 @@ import KaiEventEmitter from './KaiEventEmitter';
 import * as sdk from './sdk'
 import { KaiCapabilities } from "./KaiCapabilities";
 
-let ws = new WebSocket('ws://localhost:2203');
+var ws = new WebSocket('ws://localhost:2203');
 export let kaiEvents = new KaiEventEmitter();
 export let kaiCapabilities = KaiCapabilities;
 
@@ -46,7 +46,7 @@ ws.on('message',function(data){
                 kaiEvents.emit('kaiConnected',response) 
                 break ;
             case 'kaiDisconnected':
-                kaiEvents.emit('kaiDisconnected',response) 
+                kaiEvents.emit('kaiDisconnected',response)
                 break ;
             case 'incomingData':
                 if (isAuthenticated && capabilitiesSet) {
@@ -64,14 +64,15 @@ ws.on('message',function(data){
 
 //TODO:-
 export function setCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRight"='default',capabilities:object){ 
-        var request:object = {
-          type: 'setCapabilities',
-          kaiId: kaiId
-        }
-        let req = {...request,...capabilities}
-        ws.on('open',function(){
-            ws.send(JSON.stringify(req));
-        });
+    var request:object = {
+        type: 'setCapabilities',
+        kaiId: kaiId
+    }
+    let req = {...request,...capabilities}
+    ws.on('open',function(){
+        ws.send(JSON.stringify(req));
+    });
+
 }
 
 //NOTE : getCapbilities isn't working right now
@@ -155,6 +156,14 @@ export function auth(moduleId:string,moduleSecret:string){
     });
 };
 
+export function resetCapabilities(kaiId:number|"default"|"defaultLeft"|"defaultRight"='default',capabilities:object){
+    var request:object = {
+        type: 'setCapabilities',
+        kaiId: kaiId
+    }
+    let req = {...request,...capabilities}
+    ws.send(JSON.stringify(req));
+}
 
 declare interface ObjectConstructor {
     assign(objects: Object[]): Object;
